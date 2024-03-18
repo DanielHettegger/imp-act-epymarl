@@ -35,7 +35,7 @@ def run(_run, _config, _log):
     # unique_token = "{}__{}".format(args.name, datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
 
     try:
-        map_name = _config["env_args"]["map_name"]
+        map_name = _config["env_args"]["env_type"]
     except:
         map_name = _config["env_args"]["key"]
     unique_token = f"{_config['name']}_seed{_config['seed']}_{map_name}_{datetime.datetime.now()}"

@@ -10,6 +10,8 @@ from gym.spaces import flatdim
 import numpy as np
 from gym.wrappers import TimeLimit as GymTimeLimit
 
+from envs.pymarl_ma import PymarlMARoadEnv
+
 def env_fn(env, **kwargs) -> MultiAgentEnv:
     return env(**kwargs)
 
@@ -189,3 +191,6 @@ class _GymmaWrapper(MultiAgentEnv):
 
 
 REGISTRY["gymma"] = partial(env_fn, env=_GymmaWrapper)
+
+
+REGISTRY["road_marl"] = partial(env_fn, env=PymarlMARoadEnv)

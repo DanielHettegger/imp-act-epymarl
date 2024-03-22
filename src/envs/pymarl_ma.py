@@ -178,14 +178,23 @@ class PymarlMARoadEnv(MultiAgentEnv):
 
     def get_obs_and_time(self):
         """Returns observations and normalized time step."""
-        obs_list = self.get_list_obs(self.road_env._get_observation()["edge_beliefs"])
+        observation = self.road_env._get_observation()
+        obs_list = self.get_list_obs(observation["edge_beliefs"])
+        util_list = self.get_list_obs(observation["edge_traffic_utilization"])
+        relative_time_step = observation["time_step"] / self.road_env.max_timesteps
+
+        remaining_budget = observation["remaining_budget"] / self.road_env.budget
+        remaining_budget_years = observation["remaining_budget_years"] / self.road_env.budget_horizon
+        
         observations = []
-        for item in obs_list:
+        for belief, util in zip(obs_list,util_list):
             observations.append(
                 np.append(
-                    item,
-                    self.road_env._get_observation()["time_step"]
-                    / self.road_env.max_timesteps,
+                    belief,
+                    [relative_time_step,
+                    # util,
+                    remaining_budget,
+                    remaining_budget_years]
                 )
             )
         return observations

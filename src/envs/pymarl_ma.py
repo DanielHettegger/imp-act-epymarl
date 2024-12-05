@@ -47,7 +47,7 @@ class PymarlMARoadEnv(MultiAgentEnv):
 
         self.number_edges = []
         for edge in self.road_env.graph.es:
-            self.number_edges.append(edge["road_segments"].number_of_segments)
+            self.number_edges.append(edge["road_edge"].number_of_segments)
 
         self.n_agents = sum(self.number_edges)
 
@@ -101,7 +101,9 @@ class PymarlMARoadEnv(MultiAgentEnv):
         # action_dict = {
         #     k: action for k, action in zip(self.struct_env.agent_list, actions)
         # }
-        actions_nested = self.get_nested_list(actions, self.number_edges)
+
+        actions_list = actions.tolist()
+        actions_nested = self.get_nested_list(actions_list, self.number_edges)
         _, reward, done, _ = self.road_env.step(actions_nested)
         reward /= self.reward_normalization
         self.observations = self.get_obs_and_time()
@@ -180,21 +182,20 @@ class PymarlMARoadEnv(MultiAgentEnv):
         """Returns observations and normalized time step."""
         observation = self.road_env._get_observation()
         obs_list = self.get_list_obs(observation["edge_beliefs"])
-        util_list = self.get_list_obs(observation["edge_traffic_utilization"])
+        # util_list = self.get_list_obs(observation["edge_traffic_utilization"])
         relative_time_step = observation["time_step"] / self.road_env.max_timesteps
+        relative_budget = observation["budget_remaining"] / self.road_env.budget_amount
 
-        remaining_budget = observation["remaining_budget"] / self.road_env.budget
-        remaining_budget_years = observation["remaining_budget_years"] / self.road_env.budget_horizon
+        # remaining_budget = observation["remaining_budget"] / self.road_env.budget
+        # remaining_budget_years = observation["remaining_budget_years"] / self.road_env.budget_horizon
         
         observations = []
-        for belief, util in zip(obs_list,util_list):
+        for belief in zip(obs_list):
             observations.append(
                 np.append(
                     belief,
                     [relative_time_step,
-                    # util,
-                    remaining_budget,
-                    remaining_budget_years]
+                    relative_budget]
                 )
             )
         return observations

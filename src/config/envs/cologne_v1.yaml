@@ -5,7 +5,7 @@ env_args:
   discount_reward: 1.0
   state_obs: True
   obs_multiple: False
-  reward_normalization: 100000.0
+  reward_normalization: 1000000.0
 
 learner_log_interval: 100000
 log_interval: 100000
@@ -13,6 +13,6 @@ runner_log_interval: 100000
 test_interval: 100000
 test_nepisode: 1000
 test_greedy: True
-t_max: 2550000
+t_max: 5000000
 save_model: True
 save_model_interval: 100000
